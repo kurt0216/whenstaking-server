@@ -1,0 +1,76 @@
+Arguments: 
+  /home/kurt/.nvm/versions/node/v10.14.0/bin/node /mnt/c/Program Files (x86)/Yarn/bin/yarn.js add axios
+
+PATH: 
+  /home/kurt/.nvm/versions/node/v10.14.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files/ImageMagick-7.1.0-Q16-HDRI:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/Yarn/bin/:/mnt/d/Xampp2/php:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/TortoiseGit/bin:/mnt/d/Tool/DEV_TOOL/Android/SDK/platform-tools:/mnt/e/Groovy/environment/grails-4.0.0/bin:/mnt/c/Program Files (x86)/Groovy/bin:/mnt/c/Users/solom/AppData/Roaming/nvm:/mnt/c/Program Files/nodejs:/mnt/c/ProgramData/ComposerSetup/bin:/mnt/c/Users/solom/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/solom/AppData/Roaming/npm:/mnt/c/Users/solom/AppData/Local/Yarn/bin:/mnt/c/Users/solom/AppData/Local/Programs/EmEditor:/mnt/c/Users/solom/AppData/Roaming/Composer/vendor/bin:/snap/bin
+
+Yarn version: 
+  1.22.0
+
+Node version: 
+  10.14.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: read ECONNRESET
+      at TLSWrap.onStreamRead (internal/stream_base_commons.js:111:27)
+
+npm manifest: 
+  {
+    "name": "express-typescript",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/server.ts",
+    "dependencies": {
+      "@types/bcrypt": "^3.0.0",
+      "bcrypt": "^3.0.8",
+      "body-parser": "^1.19.0",
+      "class-transformer": "^0.2.3",
+      "class-validator": "^0.11.0",
+      "cookie-parser": "^1.4.4",
+      "dotenv": "^8.2.0",
+      "envalid": "^6.0.1",
+      "express": "^4.17.1",
+      "jsonwebtoken": "^8.5.1",
+      "mongoose": "^5.8.11"
+    },
+    "devDependencies": {
+      "@types/cookie-parser": "^1.4.2",
+      "@types/express": "^4.17.2",
+      "@types/jest": "^25.1.2",
+      "@types/jsonwebtoken": "^8.3.7",
+      "@types/mongoose": "^5.7.13",
+      "@types/node": "^13.7.0",
+      "@types/supertest": "^2.0.8",
+      "husky": "^4.2.1",
+      "jest": "^25.1.0",
+      "node-gyp": "^6.1.0",
+      "nodemon": "^2.0.2",
+      "supertest": "^4.0.2",
+      "ts-jest": "^25.2.0",
+      "ts-node": "^8.6.2",
+      "tslint": "^6.0.0",
+      "tslint-config-airbnb": "^5.11.2",
+      "typescript": "^3.7.5"
+    },
+    "scripts": {
+      "dev": "ts-node ./src/server.ts",
+      "lint": "tslint -p tsconfig.json -c tslint.json",
+      "test": "jest"
+    },
+    "author": "Marcin Wanago",
+    "license": "MIT",
+    "husky": {
+      "hooks": {
+        "pre-commit": "npm run lint"
+      }
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

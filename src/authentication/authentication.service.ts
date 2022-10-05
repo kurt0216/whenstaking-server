@@ -6,40 +6,51 @@ import TokenData from '../interfaces/tokenData.interface';
 import CreateUserDto from '../user/user.dto';
 import User from '../user/user.interface';
 import userModel from './../user/user.model';
+import tokenModel from './token.model';
 
 class AuthenticationService {
   public user = userModel;
+  public token = tokenModel;
 
   public async register(userData: CreateUserDto) {
     if (
-      await this.user.findOne({ email: userData.email })
+      await this.user.findOne({ account: userData.account })
     ) {
-      throw new UserWithThatEmailAlreadyExistsException(userData.email);
+      throw new UserWithThatEmailAlreadyExistsException(userData.account);
     }
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
+
     const user = await this.user.create({
       ...userData,
-      password: hashedPassword,
     });
-    const tokenData = this.createToken(user);
-    const cookie = this.createCookie(tokenData);
+    const token = await this.createToken(user);
+    // const cookie = this.createCookie(tokenData);
     return {
-      cookie,
+      token,
       user,
     };
   }
   public createCookie(tokenData: TokenData) {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
-  public createToken(user: User): TokenData {
-    const expiresIn = 60 * 60; // an hour
+  public createToken = async (user: User) => {
+    const expiresIn = 24 * 60 * 60; // a day
     const secret = process.env.JWT_SECRET;
     const dataStoredInToken: DataStoredInToken = {
       _id: user._id,
     };
+
+    const tokenData = jwt.sign(dataStoredInToken, secret, { expiresIn });
+    const createToken = new tokenModel({
+      expires_in: expiresIn,
+      token: tokenData,
+      account: user.account,
+    });
+
+    await createToken.save();
+
     return {
       expiresIn,
-      token: jwt.sign(dataStoredInToken, secret, { expiresIn }),
+      token: tokenData,
     };
   }
 }

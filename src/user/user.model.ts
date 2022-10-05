@@ -1,40 +1,28 @@
 import * as mongoose from 'mongoose';
 import User from './user.interface';
 
-const addressSchema = new mongoose.Schema({
-  city: String,
-  country: String,
-  street: String,
-});
-
 const userSchema = new mongoose.Schema(
   {
-    address: addressSchema,
-    email: String,
-    firstName: String,
-    lastName: String,
-    password: {
+    account: {
       type: String,
-      get: (): undefined => undefined,
+      unique: true,
     },
+    assets: String,
   },
   {
     toJSON: {
       virtuals: true,
       getters: true,
     },
+    timestamps: true,
   },
 );
 
-userSchema.virtual('fullName').get(function () {
-  return `${this.firstName} ${this.lastName}`;
-});
-
-userSchema.virtual('posts', {
-  ref: 'Post',
-  localField: '_id',
-  foreignField: 'author',
-});
+userSchema.virtual('data',{
+    ref: 'Asset',
+    localField: 'account',
+    foreignField: 'owner',
+})
 
 const userModel = mongoose.model<User & mongoose.Document>('User', userSchema);
 
