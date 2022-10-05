@@ -1,4 +1,4 @@
-import {IsBoolean, IsObject, IsString} from 'class-validator';
+import { IsBoolean, IsObject, IsString } from 'class-validator';
 import ImmutableDataDto from './immutable_data.dto';
 
 class CreateTemplateDto {

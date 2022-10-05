@@ -42,7 +42,6 @@ class AssetController implements Controller {
   private getAssetByAccount = async (request: Request, response: Response, next: NextFunction) => {
 
     // const account = request.params.account;
-    console.log('assets.by.account');
     // const assets = await this.asset.find({ owner: account })
     //     .populate('collectionData schemaData template tinfo stake');
     //
@@ -51,7 +50,7 @@ class AssetController implements Controller {
     // } else {
     //   next(new AssetNotFoundException(account));
     // }
-      response.send(moment.utc(new Date()).local().format('YYYY-MM-DDTHH:mm:ss'));
+    response.send(moment.utc(new Date()).local().format('YYYY-MM-DDTHH:mm:ss'));
   }
 
   private filterAssets = async (request: Request, response: Response, next: NextFunction) => {
@@ -64,16 +63,15 @@ class AssetController implements Controller {
       from: 'collections',
       localField: 'collection_name',
       foreignField: 'collection_name',
-      as: "collection_data",
+      as: 'collection_data',
     };
 
     const templateLookup = {
       from: 'templates',
       localField: 'template_id',
       foreignField: 'template_id',
-      as: "template_data",
+      as: 'template_data',
     };
-
 
     if (query.display === 'expired' || query.display === 'lease') {
 
@@ -84,36 +82,33 @@ class AssetController implements Controller {
         from: 'schemas',
         localField: 'schema_name',
         foreignField: 'schema_name',
-        as: "schema_data",
+        as: 'schema_data',
       };
 
       const parentLookup = {
         from: 'assets',
         localField: 'immutable_data.parent',
         foreignField: 'asset_id',
-        as: "parent_data",
-      }
+        as: 'parent_data',
+      };
 
       const projects = { collection_data: 1, schema_data: 1, template: 1 };
-      const collection_unwind = '$schema_data';
+      const collectionUnwind = '$schema_data';
       const match = { $and: [
-          { 'immutable_data.expiration': expiration },
-          { 'owner': { $eq: query.account } },
-        ] };
+        { 'immutable_data.expiration': expiration },
+        { owner: { $eq: query.account } },
+      ]};
 
       assets = await this.asset.aggregate([
         { $lookup: collectionLookup },
         { $lookup: schemaLookup },
         { $lookup: templateLookup },
         { $lookup: parentLookup },
-        // { $unwind: collection_unwind },
+        // { $unwind: collectionUnwind },
         { $match: match },
         // { $unwind: data_unwind },
-
-
         // { $project: projects },
       ]);
-      console.log('assets', assets);
     } else if (query.display === 'mixed') {
 
       assets = await this.asset.find({ owner: query.account }).populate('collection_data schema_data template_data');
@@ -141,21 +136,19 @@ class AssetController implements Controller {
             as: 'schemadats',
           },
         }],
-        as: "schema_data",
+        as: 'schema_data',
       };
-      //
-      const templateLookup = {
+      const template1Lookup = {
         from: 'templates',
         localField: 'template_id',
         foreignField: 'template_id',
         as: 'template_data',
       };
-      //
       const matchAccount = {
         $and: [
-          { 'owner': { $eq: query.account } },
-          { 'collection_name': { $ne: 'whenstakingx' } },
-          { 'template_id' : { $nin: blacklist } },
+          { owner: { $eq: query.account } },
+          { collection_name: { $ne: 'whenstakingx' } },
+          { template_id : { $nin: blacklist } },
         ],
       };
 
@@ -165,7 +158,7 @@ class AssetController implements Controller {
 
       assets = await this.asset.aggregate([
         { $lookup: collectionLookup },
-        { $lookup: templateLookup },
+        { $lookup: template1Lookup },
         // { $unwind: schema_unwind },
         { $lookup: schemaLookup },
         { $match: matchAccount },
@@ -173,7 +166,6 @@ class AssetController implements Controller {
         // { $unwind: data_unwind },
         // { $project: projects },
       ]);
-
     }
 
     response.send(assets);
@@ -185,15 +177,15 @@ class AssetController implements Controller {
       const assetData: CreateAssetDto = request.body;
       console.log('create.asset', assetData);
 
-      let smart_asset_data : StringMap = {};
+      const data : StringMap = {};
       Object.keys(assetData.data).forEach((key: string) => {
         const new_key = key.split('.').join('-');
-        smart_asset_data[new_key] = assetData.data[key];
+        data[new_key] = assetData.data[key];
       });
 
       const createdAsset = new this.asset({
         ...assetData,
-        data: smart_asset_data,
+        data,
       });
       const savedAsset = await createdAsset.save();
       response.send(savedAsset);
@@ -225,8 +217,6 @@ class AssetController implements Controller {
     const savedMeta = await createdStakes.save();
     response.send(savedMeta);
   }
-
-
 }
 
 export default AssetController;

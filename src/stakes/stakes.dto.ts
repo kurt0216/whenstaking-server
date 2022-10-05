@@ -1,4 +1,4 @@
-import {IsArray, IsString} from 'class-validator';
+import { IsArray, IsString } from 'class-validator';
 
 class CreateStakesDto {
   @IsString()

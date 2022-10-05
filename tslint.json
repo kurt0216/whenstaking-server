@@ -16,7 +16,20 @@
     "interface-name": [true, "never-prefix"],
     "import-name": false,
     "no-console": false,
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "increment-decrement": true,
+    "variable-name": {
+      "options": [
+        "ban-keywords",
+        "check-format",
+        "allow-pascal-case",
+        "allow-leading-underscore",
+        "allow-snake-case",
+        "allow-trailing-underscore",
+        "require-const-for-all-caps"
+      ]
+    },
+    "align": true
   },
   "rulesDirectory": []
 }

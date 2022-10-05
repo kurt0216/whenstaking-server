@@ -18,11 +18,11 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-userSchema.virtual('data',{
-    ref: 'Asset',
-    localField: 'account',
-    foreignField: 'owner',
-})
+userSchema.virtual('data', {
+  ref: 'Asset',
+  localField: 'account',
+  foreignField: 'owner',
+});
 
 const userModel = mongoose.model<User & mongoose.Document>('User', userSchema);
 

@@ -7,7 +7,7 @@ const tmplCapsSchema = new mongoose.Schema({
     unique: true,
   },
   value: [String],
-}, {toJSON: {virtuals: true, getters: true}});
+}, { toJSON: { virtuals: true, getters: true } });
 
 const tmplCapsModel = mongoose.model<TmplCaps & mongoose.Document>('TmplCaps', tmplCapsSchema);
 

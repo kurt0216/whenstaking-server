@@ -45,7 +45,7 @@ class MigrationController implements Controller {
 
   }
 
-  private saveAccount = async (request: Request, response: Response) => {    
+  private saveAccount = async (request: Request, response: Response) => {
     request.setTimeout(500000);
 
     try {
@@ -53,7 +53,7 @@ class MigrationController implements Controller {
 
       const collection_whitelist = collections.map((collection: { collection_name: string }) => collection.collection_name).join(',');
 
-      const accounts = await this.getAtomicData('accounts', { collection_whitelist, limit: 1000});
+      const accounts = await this.getAtomicData('accounts', { collection_whitelist, limit: 1000 });
 
       for (const account of accounts) {
         const createAccount = new this.user({
@@ -64,13 +64,11 @@ class MigrationController implements Controller {
 
       response.send(accounts);
     } catch (e) {
-      response.send({message: JSON.stringify(e)});
+      response.send({ message: JSON.stringify(e) });
     }
 
   }
   private saveCollections = async (request: Request, response: Response) => {
-    console.log('save.collection.start');
-
     try {
 
       const rows = await this.getTableRows('whenstakingx', 'genesisepoch', 'collections');
@@ -90,7 +88,7 @@ class MigrationController implements Controller {
       //   await createCollectionMeta.save();
       // }
 
-      const data = await this.getAtomicData(`collections/whenstakingx`);
+      const data = await this.getAtomicData('collections/whenstakingx');
       const createCollection = new this.collection({
         ...data,
       });
@@ -104,19 +102,13 @@ class MigrationController implements Controller {
   }
 
   private saveSchemas = async(request: Request, response: Response) => {
-    console.log('save.schema.start');
-
     try {
       const collections = await this.collection.find();
       for (const collection of collections) {
-        const schemas = await this.getAtomicData(`schemas`,{ collection_name: collection.collection_name });
-
-
+        const schemas = await this.getAtomicData('schemas', { collection_name: collection.collection_name });
         const schemadats = await this.getTableRows('whenstakingx', collection.collection_name, 'schemadats');
-        //
 
         for (const schema of schemas) {
-
           const createSchema = new this.schema({
             ...schema,
             collection_name: collection.collection_name,
@@ -143,14 +135,9 @@ class MigrationController implements Controller {
     try {
       const collections = await this.collection.find();
       for (const collection of collections) {
-        const templates = await this.getAtomicData(`templates`,{ collection_name: collection.collection_name });
-
-        console.log('templates', templates.length);
+        const templates = await this.getAtomicData('templates', { collection_name: collection.collection_name });
         const tmplcaps = await this.getTableRows('whenstakingx', collection.collection_name, 'tmplcaps');
-        //
-
         for (const template of templates) {
-
           const createTemplate = new this.template({
             ...template,
             collection_name: template.collection.collection_name,
@@ -159,7 +146,6 @@ class MigrationController implements Controller {
           const savedTemplate = await createTemplate.save();
 
           const tmplData = tmplcaps.find((it: {tmpl_id: string}) => it.tmpl_id === template.template_id);
-          console.log('templates', tmplData, template);
           const createTmpl = new this.tmplcaps({
             template_id: template.template_id,
             ...tmplData,
@@ -190,7 +176,15 @@ class MigrationController implements Controller {
 
       for (const account of accounts) {
 
-        const tinfos = await this.getTableRows('whenstakingx', 'whenstakingx', 'tinfos', 'secondary', 'name', account.account, account.account);
+        const tinfos = await this.getTableRows(
+          'whenstakingx',
+          'whenstakingx',
+          'tinfos',
+          'secondary',
+          'name',
+          account.account,
+          account.account,
+        );
         // const stakes = await this.getTableRows('whenstakingx', account.account, 'stakes');
 
         console.log(`${account.account}-tinfos`, tinfos.length);
@@ -251,7 +245,6 @@ class MigrationController implements Controller {
         //
         //
         // }
-
       }
 
       response.send({ success: true, data: accounts });
@@ -270,19 +263,19 @@ class MigrationController implements Controller {
     let result: AnyMap[] = [];
     let page: number = 1;
 
-    do {      
+    do {
       const added_query = query + `page=${page}`;
       const res = await axios.get(`${process.env.ATOMIC_API_HOST}atomicassets/v1/${path}?${added_query}`, {
         headers: {
           'Content-Type': 'application/json',
-          'apikey': process.env.API_KEY,
+          // 'apikey': process.env.API_KEY,
         },
       });
       // console.log('res', res.data);
       if (res.data.success) {
         if (res.data.data.length) {
           result = result.concat(res.data.data);
-          page++;
+          page += 1;
         } else {
           page = -1;
         }
@@ -303,7 +296,6 @@ class MigrationController implements Controller {
       lower_bound: string = null) => {
 
     const res = await axios.post(`${process.env.RPC_API_HOST}v1/chain/get_table_rows`, {
-      json: true,
       code,
       scope,
       table,
@@ -312,10 +304,11 @@ class MigrationController implements Controller {
       upper_bound,
       lower_bound,
       limit: 1000,
+      json: true,
     }, {
       headers: {
         'Content-Type': 'application/json',
-        'apikey': process.env.API_KEY,
+        // 'apikey': process.env.API_KEY,
       },
     });
     // console.log('contract.res', res.data.rows);

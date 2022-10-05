@@ -9,10 +9,7 @@ const schmSchema = new mongoose.Schema({
   collection_name: String,
   created_at_time: String,
   created_at_lock: String,
-}, {
-  toJSON: {virtuals: true, getters: true},
-  timestamps: true,
-});
+}, { toJSON: { virtuals: true, getters: true }, timestamps: true });
 
 schmSchema.virtual('collectionData', {
   ref: 'Collections',

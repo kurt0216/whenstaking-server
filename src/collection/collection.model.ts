@@ -25,7 +25,7 @@ const collectionSchema = new mongoose.Schema({
   created_at_time: String,
   created_at_block: String,
 }, {
-  toJSON: {virtuals: true, getters: true},
+  toJSON: { virtuals: true, getters: true },
   timestamps: true,
 });
 

@@ -1,4 +1,4 @@
-import {IsArray, IsBoolean, IsEmpty, IsObject, IsOptional, IsString, ValidateIf} from 'class-validator';
+import { IsArray, IsBoolean, IsEmpty, IsObject, IsOptional, IsString, ValidateIf } from 'class-validator';
 
 class CreateAssetDto {
   @IsString()

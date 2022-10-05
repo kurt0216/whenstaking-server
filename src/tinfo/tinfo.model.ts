@@ -14,7 +14,7 @@ const tinfoSchema = new mongoose.Schema({
   value: [String],
   tpts: [String],
 }, {
-  toJSON: {virtuals: true, getters: true},
+  toJSON: { virtuals: true, getters: true },
   timestamps: true,
 });
 

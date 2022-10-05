@@ -27,7 +27,7 @@ class CollectionController implements Controller {
     this.router
       .all(`${this.path}/*`)
       .post(this.path, validationMiddleware(CreateCollectionDto), this.createCollection)
-      .post(`${this.path}/meta`, validationMiddleware(CreateCollectionMetaDto), this.createCollectionMeta)
+      .post(`${this.path}/meta`, validationMiddleware(CreateCollectionMetaDto), this.createCollectionMeta);
   }
 
   private getAllCollections = async (request: RequestWithUser, response: Response) => {
@@ -36,12 +36,12 @@ class CollectionController implements Controller {
 
     const matchAccount = {
       $and: [
-        { 'owner': { $eq: account } },
+        { owner: { $eq: account } },
       ],
     };
 
     const group = {
-      _id: "$collection_name", assets: { $sum: 1 },
+      _id: '$collection_name', assets: { $sum: 1 },
     };
 
     const lookup = {
@@ -57,15 +57,14 @@ class CollectionController implements Controller {
       { $lookup: lookup },
     ]);
 
-
     response.send({
       collections: assetByCollection,
     });
   }
 
   private getCollectionByName = async (request: Request, response: Response, next: NextFunction) => {
-    const {name} = request.params;
-    const post = await this.collection.find({ collection_name: name }).populate('meta');;
+    const { name } = request.params;
+    const post = await this.collection.find({ collection_name: name }).populate('meta');
     if (post) {
       response.send(post);
     } else {
@@ -86,9 +85,8 @@ class CollectionController implements Controller {
 
   private createCollectionMeta = async (request: Request, response: Response) => {
     const metaData = request.body;
-    
     const createdCollectionMeta = new this.meta({
-      ...metaData,      
+      ...metaData,
     });
 
     const savedMeta = await createdCollectionMeta.save();
